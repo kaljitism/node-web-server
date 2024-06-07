@@ -12,7 +12,3 @@ server.listen(PORT, () => {
 server.route('get', '/', (request, response) => {
   response.sendFile('./static/index.html', 'text/html');
 });
-
-// server.route('post', '/upload', (request, response) => {
-//   response.sendFile('./storage/image.jpeg', 'image/jpeg');
-// });
