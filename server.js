@@ -4,6 +4,9 @@ const fs = require('node:fs/promises');
 const server = http.createServer();
 
 server.on('request', async (request, response) => {
+  /// File Routes
+  
+  // Serving HTML
   if (request.url === '/' && request.method === 'GET') {
     response.setHeader('Content-Type', 'text/html');
     
@@ -13,6 +16,7 @@ server.on('request', async (request, response) => {
     fileStream.pipe(response);
   }
   
+  // Serving CSS
   if (request.url === '/styles.css' && request.method === 'GET') {
     response.setHeader('Content-Type', 'text/css');
     
@@ -22,6 +26,7 @@ server.on('request', async (request, response) => {
     fileStream.pipe(response);
   }
   
+  // Serving JavaScript
   if (request.url === '/scripts.js' && request.method === 'GET') {
     response.setHeader('Content-Type', 'text/js');
     
@@ -30,8 +35,52 @@ server.on('request', async (request, response) => {
     
     fileStream.pipe(response);
   }
+  
+  /// JSON Routes
+  
+  // Login Route
+  if (request.url === '/login' && request.method === 'POST') {
+    response.setHeader('Content-Type', 'application/json');
+    response.statusCode = 200;
+    
+    const body = {
+      message: 'Logging you in',
+    }
+    
+    response.end(JSON.stringify(body));
+  }
+  
+  // User Route
+  if (request.url === '/user' && request.method === 'PUT') {
+    response.setHeader('Content-Type', 'application/json');
+    response.statusCode = 401;
+    
+    const body = {
+      message: 'You have to login first!',
+    }
+    
+    response.end(JSON.stringify(body));
+  }
+  
+  /// Advanced Routes
+  
+  // Upload Route
+  if (request.url === '/upload' && request.method === 'POST') {
+    response.setHeader('Content-Type', 'application/json');
+    response.statusCode = 200;
+    
+    const fileHandle = await fs.open('./storage/image.jpeg', 'w');
+    const fileStream = fileHandle.createWriteStream();
+    
+    request.pipe(fileStream);
+    
+    const body = {message: 'File uploaded successfully!',}
+    
+    request.on('end', () => {
+      response.end(JSON.stringify(body));
+    })
+  }
 });
-
 
 server.listen(9000, () => {
   console.log('Web Server is live at http://127.0.0.1:9000');
