@@ -65,7 +65,7 @@ server.on('request', async (request, response) => {
   /// Advanced Routes
   
   // Upload Route
-  if (request.url === '/upload' && request.method === 'POST') {
+  if (request.url === '/upload' && request.method === 'PUT') {
     response.setHeader('Content-Type', 'application/json');
     response.statusCode = 200;
     
