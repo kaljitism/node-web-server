@@ -5,9 +5,27 @@ const server = http.createServer();
 
 server.on('request', async (request, response) => {
   if (request.url === '/' && request.method === 'GET') {
-    response.setHeader("Content-Type", "text/html");
+    response.setHeader('Content-Type', 'text/html');
     
-    const fileHandle = await fs.open('./static/index.html');
+    const fileHandle = await fs.open('./static/index.html', 'r');
+    const fileStream = fileHandle.createReadStream();
+    
+    fileStream.pipe(response);
+  }
+  
+  if (request.url === '/styles.css' && request.method === 'GET') {
+    response.setHeader('Content-Type', 'text/css');
+    
+    const fileHandle = await fs.open('./static/styles.css');
+    const fileStream = fileHandle.createReadStream();
+    
+    fileStream.pipe(response);
+  }
+  
+  if (request.url === '/scripts.js' && request.method === 'GET') {
+    response.setHeader('Content-Type', 'text/js');
+    
+    const fileHandle = await fs.open('./static/scripts.js', 'r')
     const fileStream = fileHandle.createReadStream();
     
     fileStream.pipe(response);
